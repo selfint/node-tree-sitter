@@ -94,17 +94,22 @@ Local<Value> GetMarshalNodes(const Nan::FunctionCallbackInfo<Value> &info,
 
 Local<Value> GetMarshalNode(const Nan::FunctionCallbackInfo<Value> &info, const Tree *tree, TSNode node) {
   const auto &cache_entry = tree->cached_nodes_.find(node.id);
+  auto cond = cache_entry == tree->cached_nodes_.end();
+  auto end = tree->cached_nodes_.end();
   if (cache_entry == tree->cached_nodes_.end()) {
     setup_transfer_buffer(1);
     uint32_t *p = transfer_buffer;
+    auto sizeOfId = sizeof(node.id);
     MarshalNodeId(node.id, p);
     p += 2;
     *(p++) = node.context[0];
     *(p++) = node.context[1];
     *(p++) = node.context[2];
     *(p++) = node.context[3];
+    auto cond2 = !!node.id;
     if (node.id) {
-      return Nan::New(ts_node_symbol(node));
+      auto res = ts_node_symbol(node);
+      return Nan::New(res);
     }
   } else {
     return Nan::New(cache_entry->second->node);
