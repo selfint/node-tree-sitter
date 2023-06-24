@@ -29,7 +29,7 @@ void InitConversions(Local<Object> exports) {
 
   point_transfer_buffer = static_cast<uint32_t *>(malloc(2 * sizeof(uint32_t)));
 
-  #if defined(_MSC_VER) && NODE_RUNTIME_ELECTRON && NODE_MODULE_VERSION >= 89
+  #if /* defined(_MSC_VER) && NODE_RUNTIME_ELECTRON && */ NODE_MODULE_VERSION >= 89
     auto nodeBuffer = node::Buffer::New(Isolate::GetCurrent(), (char *)point_transfer_buffer, 2 * sizeof(uint32_t), [](char *data, void *hint) {}, nullptr)
       .ToLocalChecked()
       .As<v8::TypedArray>();
